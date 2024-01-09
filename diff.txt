@@ -1,0 +1,8 @@
+15c15
+<             std::vector<double> points;
+---
+>             std::vector<double, cache_aligned_allocator<double>> points;
+37c37
+<     std::cout << "No tbb allocator" << std::endl;
+---
+>     std::cout << "TBB allocator!" << std::endl;
