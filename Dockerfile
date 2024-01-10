@@ -17,7 +17,8 @@ RUN cmake --build build   --config Release  --target install  -j 8 --verbose
 WORKDIR /src
 WORKDIR /src/tbb_allocator
 COPY . .
-RUN g++ mainsimple.cpp -o simple.out -ltbb
-RUN g++ mainallocator.cpp -o tbb_allocator.out -ltbb
+ARG COMPILE_OPTS=""
+RUN g++ -std=c++17 mainsimple.cpp ${COMPILE_OPTS} -o simple.out -ltbb
+RUN g++ mainallocator.cpp ${COMPILE_OPTS} -o tbb_allocator.out -ltbb
 
 ENTRYPOINT ["/bin/sh", "-c" , "/src/tbb_allocator/simple.out && sleep 5 && /src/tbb_allocator/tbb_allocator.out"]
