@@ -13,7 +13,7 @@ public:
         auto sum = 0;
         for (int i = r.begin(); i != r.end(); ++i) {
             std::vector<double, cache_aligned_allocator<double>> points;
-            //points.reserve(44);
+            points.reserve(44);
             for (int i = 0; i < 44; ++i) {
                 points.push_back(std::rand());
             };
