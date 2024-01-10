@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <boost/align/aligned_allocator.hpp>
 
 #include "oneapi/tbb.h"
 
@@ -11,11 +12,18 @@ public:
     void operator()(const blocked_range<size_t>& r) const {
         std::chrono::steady_clock::time_point before_call = std::chrono::steady_clock::now();
         auto sum = 0;
+        //std::random_device rd;  // Will be used to obtain a seed for the random number engine
+        //std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+        //std::mt19937 gen(); // Standard mersenne_twister_engine seeded with rd()
+        std::uniform_real_distribution<> dis(1.0, 2.0);
         for (int i = r.begin(); i != r.end(); ++i) {
-            std::vector<double> points;
+            //std::vector<double> points;
+            std::vector<double, boost::alignment::aligned_allocator<double, 64> > points;
+
             points.reserve(44);
             for (int i = 0; i < 44; ++i) {
                 points.push_back(std::rand());
+                //points.push_back(dis(gen));
             };
             sum += std::fmod(std::accumulate(points.begin(), points.end(), 0), 2);
         }
