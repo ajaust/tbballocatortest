@@ -31,7 +31,7 @@ void tbbtest() {
     std::chrono::steady_clock::time_point before_call = std::chrono::steady_clock::now();
     parallel_for(blocked_range<size_t>(0, iterations, chunk_size), TBBTest(), simple_partitioner());
     std::chrono::steady_clock::time_point after_call = std::chrono::steady_clock::now();
-    std::cout << "Call took = " << std::chrono::duration_cast<std::chrono::seconds>(after_call - before_call).count() << "[s]" << std::endl;
+    std::cout << "Call took = " << std::chrono::duration_cast<std::chrono::milliseconds>(after_call - before_call).count() << "[s]" << std::endl;
 }
 
 int main() {
