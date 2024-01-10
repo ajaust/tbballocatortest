@@ -25,7 +25,8 @@ public:
 };
 
 void tbbtest() {
-    int iterations = 25000000;
+    //int iterations = 25000000;
+    int iterations = 2500000;
     int chunk_size = iterations / 8;
     std::chrono::steady_clock::time_point before_call = std::chrono::steady_clock::now();
     parallel_for(blocked_range<size_t>(0, iterations, chunk_size), TBBTest(), simple_partitioner());
