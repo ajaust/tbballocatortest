@@ -1,11 +1,25 @@
-FROM golang:1.20-alpine3.16
+FROM alpine:latest
 RUN apk --no-cache add \
     boost-dev \
     g++ \
     gcc \
     make \
     cmake \
-    git
+    git \
+    binutils \
+    perf \
+    valgrind
+#FROM ubuntu:latest
+#RUN apt upgrade && apt update && apt install -y \
+#    libboost-dev \
+#    g++ \
+#    gcc \
+#    make \
+#    cmake \
+#    git \
+#    && apt clean
+#ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+
 
 WORKDIR /
 RUN git clone https://github.com/oneapi-src/oneTBB.git
@@ -14,10 +28,9 @@ RUN git checkout v2021.10.0
 RUN cmake -S . -B build -DTBB_TEST=OFF
 RUN cmake --build build   --config Release  --target install  -j 8 --verbose
 
-WORKDIR /src
 WORKDIR /src/tbb_allocator
 COPY . .
-RUN g++ mainsimple.cpp -o simple.out -ltbb
-RUN g++ mainallocator.cpp -o tbb_allocator.out -ltbb
+ARG CXXFLAGS="-O0 -DNDEBUG"
+RUN CXXFLAGS=$CXXFLAGS make -j2
 
-ENTRYPOINT ["/bin/sh", "-c" , "/src/tbb_allocator/simple.out && sleep 5 && /src/tbb_allocator/tbb_allocator.out"]
+ENTRYPOINT ["/bin/sh", "-c" , "/src/tbb_allocator/simple && sleep 5 && /src/tbb_allocator/tbb_allocator"]
