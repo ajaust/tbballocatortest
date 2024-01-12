@@ -11,11 +11,13 @@ public:
     void operator()(const blocked_range<size_t>& r) const {
         std::chrono::steady_clock::time_point before_call = std::chrono::steady_clock::now();
         auto sum = 0;
+
+        volatile int magic = 2;
         for (int i = r.begin(); i != r.end(); ++i) {
             std::vector<double, cache_aligned_allocator<double>> points;
             //points.reserve(44);
             for (int i = 0; i < 44; ++i) {
-                points.push_back(std::rand());
+                points.push_back(i+magic);
             };
             sum += std::fmod(std::accumulate(points.begin(), points.end(), 0), 2);
         }
